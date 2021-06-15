@@ -17,15 +17,17 @@ public class Train extends Thread{
     }
 
     private void load() throws Exception{
+        Log.logInfo("Start loading into train " + name);
         railwayData.departureStation.startLoad(this);
-        var str = railwayData.departureStation.getStorage(config.trainProductName.get(name));
-        var capacity = config.trainCapacity.get(name);
+
+        Storage str = railwayData.departureStation.getStorage(config.trainProductName.get(name));
+        Integer capacity = config.trainCapacity.get(name);
 
         while (products.size() <= capacity) {
             Thread.sleep(config.loadingTime.get(config.trainProductName.get(name)));
             products.add(str.getProduct());
         }
-
+        Log.logInfo(name + " train loaded products. ");
         railwayData.departureStation.endLoad(this);
     }
 
@@ -34,6 +36,7 @@ public class Train extends Thread{
             Thread.sleep(config.unloadingTime.get(products.get(0).getName()));
             str.setProduct(products.remove(0));
         }
+        Log.logInfo(name + " train unloaded products. ");
         railwayData.arrivalStation.endLoad(this);
     }
 
@@ -47,6 +50,7 @@ public class Train extends Thread{
                 railwayData.forwardRailways.getRailway();
                 int distancePassed = 0;
                 int offset = config.trainSpeed.get(name);
+                Log.logInfo("Train  " + name + "start moving forward");
                 while (distancePassed < config.distance) {
                     distancePassed += offset;
                     Thread.sleep(100);
@@ -60,12 +64,13 @@ public class Train extends Thread{
                 railwayData.backRailways.freeRailway();
 
                 distancePassed = 0;
+                Log.logInfo("Train  " + name + "start moving backward");
                 while (distancePassed < config.distance) {
                     distancePassed += offset;
                     Thread.sleep(100);
                 }
                 railwayData.backRailways.freeRailway();
-            } catch (Exception e) {
+            } catch (Exception ex) {
                 return;
             }
         }

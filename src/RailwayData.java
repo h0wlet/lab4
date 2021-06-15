@@ -1,5 +1,4 @@
 
-
 public class RailwayData {
     public final Station departureStation;
     public final Station arrivalStation;

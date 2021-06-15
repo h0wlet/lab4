@@ -17,12 +17,14 @@ public class Depot {
     }
 
     public void launch() {
+        Log.logInfo("Depot started work");
         for (var trainName : config.trains) {
             launchNewTrain(trainName);
         }
     }
 
     public void launchNewTrain(String name) {
+        Log.logInfo(name + " train started creating");
         int assemblyTime = config.trainAssemblyTime.get(name);
         Depot depot = this;
         scheduler.schedule(new Runnable() {
@@ -30,15 +32,23 @@ public class Depot {
             public void run() {
                 Train train = new Train(name, depot, config, railwayData);
                 trains.add(train);
+                Log.logInfo("Train " + name + " was created");
                 train.start();
             }
         }, assemblyTime, TimeUnit.SECONDS);
     }
 
     public void stop() {
-        scheduler.shutdown();
+        scheduler.shutdownNow();
         for (var train : trains) {
             train.interrupt();
+            try {
+                train.join();
+            } catch (InterruptedException ex){
+                ex.printStackTrace();
+            }
         }
+        Log.logInfo("Depot finished work");
     }
+
 }

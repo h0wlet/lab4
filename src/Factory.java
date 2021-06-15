@@ -1,5 +1,4 @@
 
-
 public class Factory extends Thread{
     private final Storage storage;
     private final String name;
@@ -18,9 +17,11 @@ public class Factory extends Thread{
             try {
                 Thread.sleep(productionTime);
                 prd = new Product(name);
+                Log.logInfo("Factory created product: " + name);
                 storage.setProduct(prd);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Log.logError(name + " factory stopped");
             }
         }
     }

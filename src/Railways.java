@@ -1,5 +1,4 @@
 
-
 public class Railways {
     private final int capacity;
     private int busyCount;

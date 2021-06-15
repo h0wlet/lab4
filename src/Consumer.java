@@ -15,7 +15,9 @@ public class Consumer extends Thread{
             try {
                 Thread.sleep(consumptionTime);
                 Product prd = storage.getProduct();
+                Log.logInfo("Consumer consume product");
             } catch (InterruptedException e) {
+                Log.logError("Consumer stopped");
                 e.printStackTrace();
             }
         }

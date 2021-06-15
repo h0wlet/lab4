@@ -33,6 +33,7 @@ public class TransportCompany {
     }
 
     public void start() {
+        Log.logInfo("Program started");
         for (var fact : factories) {
             fact.start();
         }
@@ -44,12 +45,23 @@ public class TransportCompany {
     }
 
     public void stop() {
+        Log.logInfo("Beginning of destruction");
         for (var fact : factories) {
             fact.interrupt();
+            try {
+                fact.join();
+            } catch (InterruptedException ex){
+                ex.printStackTrace();
+            }
         }
         depot.stop();
         for (var cons : consumers) {
             cons.interrupt();
+            try {
+                cons.join();
+            } catch (InterruptedException ex){
+                ex.printStackTrace();
+            }
         }
     }
 }
